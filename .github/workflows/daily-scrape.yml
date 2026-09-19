@@ -1,0 +1,26 @@
+name: 每日爬蟲排程
+
+on:
+  schedule:
+    # UTC 時間，台灣時間 09:00 = UTC 01:00
+    - cron: "0 1 * * *"
+  workflow_dispatch: {}   # 也可以手動在 GitHub 網頁上按按鈕觸發，方便測試
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安裝套件
+        run: pip install requests beautifulsoup4
+
+      - name: 執行爬蟲管線
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python run_pipeline.py
