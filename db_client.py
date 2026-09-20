@@ -43,15 +43,15 @@ def fetch_existing_product_names() -> Set[str]:
     return {row["name"] for row in resp.json()}
 
 
-def insert_products(names_with_meta: List[dict]) -> None:
-    """names_with_meta: [{"name": ..., "category": ..., "source_url": ...}, ...]"""
-    if not names_with_meta:
+def insert_products(products: List[dict]) -> None:
+    """products: [{"name":..., "category":..., "price":..., "image_url":..., "source_url":...}, ...]"""
+    if not products:
         return
     _check_config()
     resp = requests.post(
         f"{SUPABASE_URL}/rest/v1/products",
         headers=HEADERS,
-        json=names_with_meta,
+        json=products,
         timeout=10,
     )
     resp.raise_for_status()
